@@ -143,3 +143,9 @@ export type TenantStaffProfileResponse = ApiResponse<{
 export type TenantStaffLogoutResponse = ApiResponse<{
   message: string;
 }>;
+
+export type TenantFeatureAccessRequest = { 
+  feature: string[]
+}
+
+export type TenantFeatureAccessResponse = ApiResponse<Record<string, boolean>>;
