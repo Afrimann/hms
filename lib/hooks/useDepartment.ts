@@ -1,5 +1,5 @@
-import { Department } from "@/types/department.type";
-import { departmentRepository } from "../repositories/department.repository";
+import { CreateDepartmentUnitRequest, Department } from "@/types/department.type";
+import { departmentService } from "@/lib/services/department.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "../store/auth.store";
 
@@ -7,7 +7,7 @@ export const useAllDepartment = () => {
   const token = useAuthStore((s) => s.token);
   return useQuery({
     queryKey: ["departments"],
-    queryFn: () => departmentRepository.getAllDepartments(token!),
+    queryFn: () => departmentService.getAllDepartments(),
     enabled: !!token,
   });
 };
@@ -16,21 +16,19 @@ export const useDepartmentById = (id: number) => {
   const token = useAuthStore((s) => s.token);
   return useQuery({
     queryKey: ["departments", id],
-    queryFn: () => departmentRepository.getDepartmentById(id, token!),
+    queryFn: () => departmentService.getDepartmentById(id),
     enabled: !!token,
   });
-}
+};
 
 export const useCreateDepartment = () => {
-  const token = useAuthStore((s) => s.token);
   return useMutation({
-    mutationFn: (data: Omit<Department, "id" | "created_at" | "updated_at">) =>
-      departmentRepository.createDepartment(data, token!),
+    mutationFn: (data: Omit<Department, "created_at" | "updated_at">) =>
+      departmentService.createDepartment(data),
   });
 };
 
 export const useUpdateDepartment = () => {
-  const token = useAuthStore((s) => s.token);
   return useMutation({
     mutationFn: ({
       id,
@@ -38,6 +36,57 @@ export const useUpdateDepartment = () => {
     }: {
       id: number;
       data: Partial<Omit<Department, "id" | "created_at" | "updated_at">>;
-    }) => departmentRepository.updateDepartment(id, data, token!),
+    }) => departmentService.updateDepartment(id, data),
   });
 };
+
+export const useSoftDeleteDepartment = () => {
+  return useMutation({
+    mutationFn: ({ id, is_active }: { id: number; is_active: boolean }) =>
+      departmentService.softDeleteDepartment(id, is_active),
+  });
+};
+
+export const useCreateDepartmentUnit = () => {
+  return useMutation({
+    mutationFn: (data: CreateDepartmentUnitRequest) =>
+      departmentService.createDepartmentUnit(data),
+  });
+}
+
+export const useListDepartmentUnits = () => {
+  const token = useAuthStore((s) => s.token);
+  return useQuery({
+    queryKey: ["department-units"],
+    queryFn: () => departmentService.listDepartmentUnits(),
+    enabled: !!token,
+  });
+};
+
+export const useShowDepartmentUnit = (id: number) => {
+  const token = useAuthStore((s) => s.token);
+  return useQuery({
+    queryKey: ["department-units", id],
+    queryFn: () => departmentService.showDepartmentUnit(id),
+    enabled: !!token,
+  });
+};
+
+export const useUpdateDepartmentUnit = () => {
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: Partial<CreateDepartmentUnitRequest>;
+    }) => departmentService.updateDepartmentUnit(id, data),
+  });
+};
+
+export const useDeleteDepartmentUnit = () => {
+  return useMutation({
+    mutationFn: (id: number) => departmentService.deleteDepartmentUnit(id),
+  });
+};
+
