@@ -1,7 +1,10 @@
 import { apiClient } from "@/lib/api-client";
 import type {
+  AllDepartmentsResponse,
   CreateDepartmentUnitRequest,
   Department,
+  ShowDepartmentUnitResponse,
+  singleDepartmentResponse,
 } from "@/types/department.type";
 
 class DepartmentRepository {
@@ -20,14 +23,14 @@ class DepartmentRepository {
   }
 
   getAllDepartments(token: string) {
-    return apiClient<Department[]>(this.basePath, {
+    return apiClient<AllDepartmentsResponse>(this.basePath, {
       method: "GET",
       token,
     });
   }
 
   getDepartmentById(id: number, token: string) {
-    return apiClient<Department>(`${this.basePath}/${id}`, {
+    return apiClient<singleDepartmentResponse>(`${this.basePath}/${id}`, {
       method: "GET",
       token,
     });
@@ -38,7 +41,7 @@ class DepartmentRepository {
     data: Partial<Omit<Department, "id" | "created_at" | "updated_at">>,
     token: string,
   ) {
-    return apiClient<Department>(`${this.basePath}/${id}`, {
+    return apiClient<singleDepartmentResponse>(`${this.basePath}/${id}`, {
       method: "PUT",
       body: data,
       token,
@@ -69,7 +72,7 @@ class DepartmentRepository {
   }
 
   showDepartmentUnit(id: number, token: string) {
-    return apiClient(`${this.unitBasePath}/${id}`, {
+    return apiClient<ShowDepartmentUnitResponse>(`${this.unitBasePath}/${id}`, {
       method: "GET",
       token,
     });
@@ -80,7 +83,7 @@ class DepartmentRepository {
     data: Partial<Omit<CreateDepartmentUnitRequest, "department_id">>,
     token: string,
   ) {
-    return apiClient(`${this.unitBasePath}/${id}`, {
+    return apiClient<ShowDepartmentUnitResponse>(`${this.unitBasePath}/${id}`, {
       method: "PUT",
       body: data,
       token,

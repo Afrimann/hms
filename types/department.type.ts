@@ -63,3 +63,21 @@ export type CreateDepartmentUnitRequest = {
   head_user_id?: null;
 };
 
+export type ShowDepartmentUnitResponse = ApiResponse<{
+  id: number;
+  department_id: number;
+  department: {
+    id: number;
+    name: string;
+    code: string;
+  };
+  name: string;
+  code: string;
+  description: string | null;
+  head_user_id: null;
+  head: null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}>;
+
