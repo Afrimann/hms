@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import TenantAuthGuard from "./TenantAuthGuard";
 
 export const metadata: Metadata = {
   title: "MedCloud | Your Hospital in the Cloud",
@@ -11,5 +12,5 @@ export default function TenantLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div>{children}</div>;
+  return <TenantAuthGuard>{children}</TenantAuthGuard>;
 }

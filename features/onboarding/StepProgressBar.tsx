@@ -10,7 +10,7 @@ type Props = {
 
 export default function StepProgressBar({ currentStep }: Props) {
   return (
-    <div className="flex items-center w-full mb-10">
+    <div className="flex items-center w-full mb-10 max-w-2xl justify-center mx-auto">
       {STEPS.map((step, i) => {
         const isCompleted = step.number < currentStep;
         const isActive = step.number === currentStep;

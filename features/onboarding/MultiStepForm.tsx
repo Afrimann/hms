@@ -43,11 +43,10 @@ const INITIAL_FORM: FormData = {
 };
 
 const PLAN_ID_MAP: Record<string, number> = {
-  basic: 1,
-  pro: 2,
-  enterprise: 3,
+  free: 1,
+  standard: 2,
+  premium: 3,
 };
-
 
 function validateStep(step: number, data: FormData): FormErrors {
   const errors: FormErrors = {};
@@ -68,13 +67,15 @@ function validateStep(step: number, data: FormData): FormErrors {
   }
 
   if (step === 2) {
-    if (!data.hospitalName.trim()) errors.hospitalName = "Hospital name is required";
+    if (!data.hospitalName.trim())
+      errors.hospitalName = "Hospital name is required";
     if (!data.hospitalEmail.trim()) {
       errors.hospitalEmail = "Hospital email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.hospitalEmail)) {
       errors.hospitalEmail = "Enter a valid email address";
     }
-    if (!data.hospitalPhone.trim()) errors.hospitalPhone = "Hospital phone number is required";
+    if (!data.hospitalPhone.trim())
+      errors.hospitalPhone = "Hospital phone number is required";
     if (!data.address.trim()) errors.address = "Hospital address is required";
   }
 
@@ -90,10 +91,13 @@ const TOTAL_STEPS = 3;
 export default function MultiStepForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
-  const email = searchParams.get('email') ?? ""
+  const email = searchParams.get("email") ?? "";
 
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<FormData>({ ...INITIAL_FORM, email });
+  const [formData, setFormData] = useState<FormData>({
+    ...INITIAL_FORM,
+    email,
+  });
   const [showErrors, setShowErrors] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -102,7 +106,8 @@ export default function MultiStepForm() {
   if (!token) return <TokenNotFound />;
 
   const currentErrors = showErrors ? validateStep(currentStep, formData) : {};
-  const isCurrentStepValid = Object.keys(validateStep(currentStep, formData)).length === 0;
+  const isCurrentStepValid =
+    Object.keys(validateStep(currentStep, formData)).length === 0;
 
   function updateField(field: keyof FormData, value: string) {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -153,7 +158,40 @@ export default function MultiStepForm() {
         onSuccess: () => setSubmitted(true),
         onError: (err) =>
           toast.error(err.message || "Registration failed. Please try again."),
-      }
+      },
+    );
+  }
+
+  function handleSelectPlan(planId: string) {
+    const updatedData = { ...formData, plan: planId };
+    setFormData(updatedData);
+
+    const slug = updatedData.hospitalName
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+
+    mutate(
+      {
+        token,
+        hospital_name: updatedData.hospitalName,
+        hospital_email: updatedData.hospitalEmail,
+        hospital_phone: updatedData.hospitalPhone,
+        hospital_address: updatedData.address,
+        slug,
+        admin_fullname: updatedData.fullName,
+        admin_email: email,
+        admin_phone: updatedData.phone,
+        password: updatedData.password,
+        password_confirmation: updatedData.confirmPassword,
+        plan_id: PLAN_ID_MAP[planId] ?? 1,
+        billing_cycle: "monthly",
+      },
+      {
+        onSuccess: () => setSubmitted(true),
+        onError: (err) =>
+          toast.error(err.message || "Registration failed. Please try again."),
+      },
     );
   }
 
@@ -168,56 +206,75 @@ export default function MultiStepForm() {
             stroke="currentColor"
             strokeWidth={2.5}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900">Registration Complete!</h2>
+        <h2 className="text-2xl font-bold text-gray-900">
+          Registration Complete!
+        </h2>
         <p className="text-text-muted text-sm max-w-sm">
-          Your hospital workspace has been created. Check your email to verify your
-          account and get started.
+          Your hospital workspace has been created. Check your email to verify
+          your account and get started.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 py-10 md:py-14">
+    <div className="w-full px-4 py-10 md:py-14">
       <StepProgressBar currentStep={currentStep} />
 
-      <div
-        key={currentStep}
-        className="step-enter bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-10"
-      >
+      <div key={currentStep} className="step-enter">
         {currentStep === 1 && (
-          <AdminProfileStep
-            formData={formData}
-            errors={currentErrors}
-            updateField={updateField}
-          />
-        )}
-        {currentStep === 2 && (
-          <HospitalInfoStep
-            formData={formData}
-            errors={currentErrors}
-            updateField={updateField}
-          />
-        )}
-        {currentStep === 3 && (
-          <ChoosePlanStep
-            formData={formData}
-            errors={currentErrors}
-            updateField={updateField}
-          />
+          <div className=" p-8 md:p-10 max-w-2xl mx-auto">
+            <AdminProfileStep
+              formData={formData}
+              errors={currentErrors}
+              updateField={updateField}
+            />
+            <NavigationControls
+              currentStep={currentStep}
+              totalSteps={TOTAL_STEPS}
+              isValid={isCurrentStepValid}
+              onBack={handleBack}
+              onNext={handleNext}
+              isSubmitting={isPending}
+            />
+          </div>
         )}
 
-        <NavigationControls
-          currentStep={currentStep}
-          totalSteps={TOTAL_STEPS}
-          isValid={isCurrentStepValid}
-          onBack={handleBack}
-          onNext={handleNext}
-          isSubmitting={isPending}
-        />
+        {currentStep === 2 && (
+          <div className=" p-8 md:p-10 max-w-2xl mx-auto">
+            <HospitalInfoStep
+              formData={formData}
+              errors={currentErrors}
+              updateField={updateField}
+            />
+            <NavigationControls
+              currentStep={currentStep}
+              totalSteps={TOTAL_STEPS}
+              isValid={isCurrentStepValid}
+              onBack={handleBack}
+              onNext={handleNext}
+              isSubmitting={isPending}
+            />
+          </div>
+        )}
+
+        {currentStep === 3 && (
+          <div className="max-w-5xl mx-auto">
+            <ChoosePlanStep
+              errors={currentErrors}
+              onSelectPlan={handleSelectPlan}
+              onBack={handleBack}
+              isSubmitting={isPending}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
