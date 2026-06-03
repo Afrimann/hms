@@ -9,6 +9,10 @@ import type {
   RegisterRequest,
   RegisterResponse,
   VerifyTokenResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
 } from "@/types/auth.type";
 
 class AuthRepository {
@@ -55,6 +59,20 @@ class AuthRepository {
     return apiClient<TenantStaffLogoutResponse>(`${this.basePath}/logout`, {
       method: "POST",
       token,
+    });
+  }
+
+  forgotPassword(data: ForgotPasswordRequest) {
+    return apiClient<ForgotPasswordResponse>(`${this.basePath}/forgot-password`, {
+      method: "POST",
+      body: data,
+    });
+  }
+
+  resetPassword(data: ResetPasswordRequest) {
+    return apiClient<ResetPasswordResponse>(`${this.basePath}/reset-password`, {
+      method: "POST",
+      body: data,
     });
   }
 }

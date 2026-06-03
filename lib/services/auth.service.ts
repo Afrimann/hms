@@ -4,6 +4,8 @@ import type {
   HospitalRegistrationRequest,
   RegisterRequest,
   TenantStaffLoginRequest,
+  ForgotPasswordRequest,
+  ResetPasswordRequest,
 } from "@/types/auth.type";
 
 export const authService = {
@@ -42,5 +44,13 @@ export const authService = {
 
   verifyToken(token: string) {
     return authRepository.verifyTokenValidity(token);
+  },
+
+  forgotPassword(data: ForgotPasswordRequest) {
+    return authRepository.forgotPassword(data);
+  },
+
+  resetPassword(data: ResetPasswordRequest) {
+    return authRepository.resetPassword(data);
   },
 };

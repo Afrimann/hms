@@ -2,25 +2,64 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --primary: #2E4EEA;
+  --border: #BFBFBF;
+  --text-muted: #595959;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: var(--primary);
+  --color-border: var(--border);
+  --color-text-muted: var(--text-muted);
+  --font-sans: var(--font-inter);
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: black;
+  font-family: var(--font-inter), sans-serif;
+}
+
+@keyframes stepEnter {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.step-enter {
+  animation: stepEnter 0.25s ease-out;
+}
+
+/* ─── Design-system typography tokens (Figma: desktop-font/*) ─── */
+@layer utilities {
+  .font-small-regular {
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+    font-weight: 400;
+    color: #1F1F1F
+  }
+
+  .font-p-regular {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 400;
+  }
+
+  .font-h5 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+  }
+  .font-table-fields {
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
 }

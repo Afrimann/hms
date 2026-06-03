@@ -3,7 +3,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { authService } from "@/lib/services/auth.service";
 import { useAuthStore } from "@/lib/store/auth.store";
-import type { TenantStaffLoginRequest } from "@/types/auth.type";
+import type { TenantStaffLoginRequest, ForgotPasswordRequest, ResetPasswordRequest } from "@/types/auth.type";
 
 export function useLogin() {
   return useMutation({
@@ -24,5 +24,19 @@ export function useProfile() {
 export function useLogout() {
   return useMutation({
     mutationFn: () => authService.logout(),
+  });
+}
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: (data: ForgotPasswordRequest) =>
+      authService.forgotPassword(data),
+  });
+}
+
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: (data: ResetPasswordRequest) =>
+      authService.resetPassword(data),
   });
 }

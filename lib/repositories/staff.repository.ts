@@ -1,24 +1,27 @@
 import {
   AcceptInviteRequest,
+  AllStaffResponse,
   CreateStaffRequest,
   CreateStaffResponse,
   RejectInviteRequest,
-  Staff,
+  StaffByIdResponse,
 } from "@/types/staff.type";
+import { AllRolesResponse } from "@/types/role.type";
 import { apiClient } from "../api-client";
+import { ApiResponse } from "@/types/auth.type";
 
 class StaffRepository {
   private readonly basePath = "/api/staff";
 
   getStaffById(id: number, token: string) {
-    return apiClient<Staff>(`${this.basePath}/${id}`, {
+    return apiClient<StaffByIdResponse>(`${this.basePath}/${id}`, {
       method: "GET",
-      token,
+      token,  
     });
   }
 
   getAllStaff(token: string) {
-    return apiClient<Staff[]>(this.basePath, {
+    return apiClient<AllStaffResponse>(this.basePath, {
       method: "GET",
       token,
     });
@@ -33,7 +36,7 @@ class StaffRepository {
   }
 
   updateStaff(id: number, data: Partial<CreateStaffRequest>, token: string) {
-    return apiClient(`${this.basePath}/${id}`, {
+    return apiClient<StaffByIdResponse>(`${this.basePath}/${id}`, {
       method: "PUT",
       body: data,
       token,
@@ -41,37 +44,44 @@ class StaffRepository {
   }
 
   deactivateStaff(id: number, token: string) {
-    return apiClient(`${this.basePath}/${id}/deactivate`, {
+    return apiClient<ApiResponse<null>>(`${this.basePath}/${id}/deactivate`, {
       method: "PUT",
       token,
     });
   }
 
   reactivateStaff(id: number, token: string) {
-    return apiClient(`${this.basePath}/${id}/reactivate`, {
+    return apiClient<ApiResponse<null>>(`${this.basePath}/${id}/reactivate`, {
       method: "PUT",
       token,
     });
   }
 
   resendInvite(id: number, token: string) {
-    return apiClient(`${this.basePath}/${id}/resend-invite`, {
+    return apiClient<ApiResponse<null>>(`${this.basePath}/${id}/resend-invite`, {
       method: "POST",
       token,
     });
   }
 
   acceptInvite(data: AcceptInviteRequest) {
-    return apiClient(`${this.basePath}/invite/accept`, {
+    return apiClient<ApiResponse<null>>(`${this.basePath}/invite/accept`, {
       method: "POST",
       body: data,
     });
   }
 
   rejectInvite(data: RejectInviteRequest) {
-    return apiClient(`${this.basePath}/invite/reject`, {
+    return apiClient<ApiResponse<null>>(`${this.basePath}/invite/reject`, {
       method: "POST",
       body: data,
+    });
+  }
+
+  getAllRoles(token: string) {
+    return apiClient<AllRolesResponse>('/api/roles', {
+      method: "GET",
+      token,
     });
   }
 }

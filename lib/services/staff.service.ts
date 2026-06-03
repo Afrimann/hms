@@ -24,12 +24,12 @@ export const staffService = {
 
   deactivateStaff(id: number) {
     const token = useAuthStore.getState().token!;
-    return staffRepository.deactivateStaff(token, id);
+    return staffRepository.deactivateStaff(id, token);
   },
 
   reactivateStaff(id: number) {
     const token = useAuthStore.getState().token!;
-    return staffRepository.reactivateStaff(token, id);
+    return staffRepository.reactivateStaff(id, token);
   },
 
   resendInvite(id: number) {
@@ -43,5 +43,10 @@ export const staffService = {
 
   rejectInvite(data: RejectInviteRequest) {
     return staffRepository.rejectInvite(data);
+  },
+
+  getAllRoles() {
+    const token = useAuthStore.getState().token!;
+    return staffRepository.getAllRoles(token);
   },
 };
