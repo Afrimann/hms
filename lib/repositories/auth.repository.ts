@@ -9,51 +9,72 @@ import type {
   RegisterRequest,
   RegisterResponse,
   VerifyTokenResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
 } from "@/types/auth.type";
 
-export const authRepository = {
+class AuthRepository {
+  private readonly basePath = "/api/auth";
+  private readonly registerPath = "/api/register";
+
+  requestRegistrationLink(credentials: RegisterRequest) {
+    return apiClient<RegisterResponse>(`${this.registerPath}/request-link`, {
+      method: "POST",
+      body: credentials,
+    });
+  }
+
+  registerHospital(credentials: HospitalRegistrationRequest) {
+    return apiClient<HospitalRegistrationResponse>(`${this.registerPath}/complete`, {
+      method: "POST",
+      body: credentials,
+    });
+  }
+
+  verifyTokenValidity(token: string) {
+    return apiClient<VerifyTokenResponse>(`${this.registerPath}/verify-token`, {
+      method: "GET",
+      body: token,
+    });
+  }
+
   login(credentials: TenantStaffLoginRequest, token?: string) {
-    return apiClient<TenantStaffLoginResponse>("/api/auth/login", {
+    return apiClient<TenantStaffLoginResponse>(`${this.basePath}/login`, {
       method: "POST",
       body: credentials,
       token,
     });
-  },
+  }
 
   getProfile(token: string) {
-    return apiClient<TenantStaffProfileResponse>("/api/auth/me", {
+    return apiClient<TenantStaffProfileResponse>(`${this.basePath}/me`, {
       method: "GET",
       token,
     });
-  },
+  }
 
   logout(token: string) {
-    return apiClient<TenantStaffLogoutResponse>("/api/auth/logout", {
+    return apiClient<TenantStaffLogoutResponse>(`${this.basePath}/logout`, {
       method: "POST",
       token,
     });
-  },
-
-  requestRegistrationLink(credentials: RegisterRequest, token: string) {
-    return apiClient<RegisterResponse>("api/auth/magic-link-sent", {
-        method: 'POST',
-        body: credentials,
-        token
-    })
   }
-  ,
-  registerHospital(credentials: HospitalRegistrationRequest, token: string){
-    return apiClient<HospitalRegistrationResponse>("api/auth/register-hospital", {
-        method: 'POST',
-        body: credentials,
-        token
-    })
-  },
-  verifyTokenValidity(token: string) {
-    return apiClient<VerifyTokenResponse>("api/auth/verify-token", {
-        method: 'GET',
-        body: token
-    })
-  },
-  
- };
+
+  forgotPassword(data: ForgotPasswordRequest) {
+    return apiClient<ForgotPasswordResponse>(`${this.basePath}/forgot-password`, {
+      method: "POST",
+      body: data,
+    });
+  }
+
+  resetPassword(data: ResetPasswordRequest) {
+    return apiClient<ResetPasswordResponse>(`${this.basePath}/reset-password`, {
+      method: "POST",
+      body: data,
+    });
+  }
+}
+
+export const authRepository = new AuthRepository();

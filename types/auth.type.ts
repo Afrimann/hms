@@ -143,3 +143,28 @@ export type TenantStaffProfileResponse = ApiResponse<{
 export type TenantStaffLogoutResponse = ApiResponse<{
   message: string;
 }>;
+
+export type TenantFeatureAccessRequest = {
+  feature: string[]
+}
+
+export type TenantFeatureAccessResponse = ApiResponse<Record<string, boolean>>;
+
+export type ForgotPasswordRequest = {
+  email: string;
+};
+
+export type ForgotPasswordResponse = ApiResponse<{
+  message: string;
+}>;
+
+export type ResetPasswordRequest = {
+  email: string;
+  token: string;
+  password: string;
+  password_confirmation: string;
+};
+
+export type ResetPasswordResponse = ApiResponse<{
+  message: string;
+}>;

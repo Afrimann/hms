@@ -1,4 +1,32 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+// Frontend subdomains that signal we're on a tenant workspace.
+// The API always lives on phms.tech regardless of which frontend domain is used.
+const FRONTEND_TENANT_DOMAINS = ["phms.tech", "localhost", "lvh.me", "localtest.me"] as const;
+const API_BASE = "https://api.phms.tech";
+
+function buildBaseUrl(): string {
+  // Server-side: no window available, use the static env var.
+  if (typeof window === "undefined") {
+    return process.env.NEXT_PUBLIC_API_URL ?? API_BASE;
+  }
+
+  const hostname = window.location.hostname;
+  const isTenantSubdomain = FRONTEND_TENANT_DOMAINS.some((d) =>
+    hostname.endsWith(`.${d}`)
+  );
+
+  if (!isTenantSubdomain) {
+    // Root domain / localhost — public routes (registration, onboarding)
+    return process.env.NEXT_PUBLIC_API_URL ?? API_BASE;
+  }
+
+  // Extract slug from whatever frontend domain is in use:
+  //   omotosho-health-centre.lvh.me      → omotosho-health-centre
+  //   omotosho-health-centre.phms.tech   → omotosho-health-centre
+  const slug = hostname.split(".")[0];
+
+  // Tenant API lives at {slug}.phms.tech/api/...
+  return `https://${slug}.phms.tech`;
+}
 
 type RequestOptions = Omit<RequestInit, "body"> & {
   body?: unknown;
@@ -20,7 +48,9 @@ export async function apiClient<T>(
   path: string,
   { body, token, headers, ...init }: RequestOptions = {}
 ): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
+  const baseUrl = buildBaseUrl();
+
+  const res = await fetch(`${baseUrl}${path}`, {
     ...init,
     headers: {
       "Content-Type": "application/json",
