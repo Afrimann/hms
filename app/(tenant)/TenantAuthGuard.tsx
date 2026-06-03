@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuthStore } from "@/lib/store/auth.store";
 
-const AUTH_PATHS = ["/login", "/forgot-password", "/reset-password"];
+const AUTH_PATHS = ["/login", "/forgot-password", "/reset-password", "/staff/invite/accept"];
 
 export default function TenantAuthGuard({
   children,
@@ -14,6 +14,7 @@ export default function TenantAuthGuard({
   const router = useRouter();
   const pathname = usePathname();
   const token = useAuthStore((s) => s.token);
+  const hasRole = useAuthStore((s) => s.hasRole);
 
   // Zustand persist hydrates from localStorage after first render.
   // Block rendering until hydration is done so the guard has the real token value.
@@ -34,9 +35,12 @@ export default function TenantAuthGuard({
 
     // Redirect already-authenticated users away from auth pages
     if (token && isAuthPath) {
-      router.replace("/dashboard");
+      const destination = hasRole("hospital_admin")
+        ? "/admin-workspace/dashboard"
+        : "/dashboard";
+      router.replace(destination);
     }
-  }, [hydrated, token, pathname, router]);
+  }, [hydrated, token, pathname, hasRole, router]);
 
   // During hydration show nothing to prevent a flash of protected content
   if (!hydrated) return null;

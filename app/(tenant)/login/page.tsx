@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useLogin } from "@/lib/hooks/useAuth";
+import { useAuthStore } from "@/lib/store/auth.store";
 import ForgotPasswordModal from "@/features/auth/ForgotPasswordModal";
 
 function getTenantDisplayName(): string {
@@ -18,6 +19,7 @@ function getTenantDisplayName(): string {
 export default function TenantLoginPage() {
   const router = useRouter();
   const { mutate, isPending } = useLogin();
+  const hasRole = useAuthStore((s) => s.hasRole);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -55,7 +57,10 @@ export default function TenantLoginPage() {
       {
         onSuccess: () => {
           toast.success("Logged in successfully!");
-          router.replace("/dashboard");
+          const destination = hasRole("hospital_admin")
+            ? "/admin-workspace/dashboard"
+            : "/dashboard";
+          router.replace(destination);
         },
         onError: (err) =>
           toast.error(err.message || "Invalid credentials. Please try again."),

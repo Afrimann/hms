@@ -60,3 +60,13 @@ export const useRejectInvite = () => {
     mutationFn: (data: RejectInviteRequest) => staffService.rejectInvite(data),
   });
 };
+
+export const useRoles = () => {
+  const token = useAuthStore((s) => s.token);
+  return useQuery({
+    queryKey: ["roles"],
+    queryFn: () => staffService.getAllRoles(),
+    enabled: !!token,
+  });
+};
+

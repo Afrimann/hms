@@ -44,4 +44,9 @@ export const staffService = {
   rejectInvite(data: RejectInviteRequest) {
     return staffRepository.rejectInvite(data);
   },
+
+  getAllRoles() {
+    const token = useAuthStore.getState().token!;
+    return staffRepository.getAllRoles(token);
+  },
 };

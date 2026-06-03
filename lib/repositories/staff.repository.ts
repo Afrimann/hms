@@ -6,6 +6,7 @@ import {
   RejectInviteRequest,
   StaffByIdResponse,
 } from "@/types/staff.type";
+import { AllRolesResponse } from "@/types/role.type";
 import { apiClient } from "../api-client";
 import { ApiResponse } from "@/types/auth.type";
 
@@ -74,6 +75,13 @@ class StaffRepository {
     return apiClient<ApiResponse<null>>(`${this.basePath}/invite/reject`, {
       method: "POST",
       body: data,
+    });
+  }
+
+  getAllRoles(token: string) {
+    return apiClient<AllRolesResponse>('/api/roles', {
+      method: "GET",
+      token,
     });
   }
 }
