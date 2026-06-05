@@ -4,12 +4,13 @@ import { useEffect, useRef } from "react";
 import { useAuthStore } from "@/lib/store/auth.store";
 import { getEchoClient, disconnectEcho } from "@/lib/echo";
 
-// Shape of the payload the backend sends on staff.invite.status.changed
 export type StaffInviteStatusPayload = {
   staff_id: number;
   staff_name: string;
+  staff_email: string;
   status: "accepted" | "rejected";
-  message?: string;
+  timestamp: string;
+  triggered_by: { id: number; name: string };
 };
 
 type UseStaffInviteStatusOptions = {
@@ -26,7 +27,7 @@ export function useStaffInviteStatus({
   onStatusChanged,
 }: UseStaffInviteStatusOptions) {
   const token = useAuthStore((s) => s.token);
-  const hospitalId = useAuthStore((s) => s.hospital?.id);
+  const tenantId = useAuthStore((s) => s.tenant?.id);
 
   // Keep callback ref stable so the effect doesn't re-subscribe on every render
   const callbackRef = useRef(onStatusChanged);
@@ -35,34 +36,40 @@ export function useStaffInviteStatus({
   });
 
   useEffect(() => {
-    if (!token || !hospitalId) return;
+    console.log("[Reverb] token:", !!token, "tenantId:", tenantId);
+    if (!token || !tenantId) return;
 
-    const channelName = `tenant.${hospitalId}.staff`;
+    const channelName = `tenant.${tenantId}.staff`;
     let unsubscribed = false;
 
     getEchoClient(token).then((echo) => {
       if (unsubscribed) return;
 
+      console.log("[Reverb] subscribing to channel:", channelName);
+
       echo
         .private(channelName)
-        // Leading dot tells Echo the event name is already fully-qualified
-        // (no Laravel namespace prefix). Remove the dot if the backend omits it.
         .listen(
           ".staff.invite.status.changed",
           (payload: StaffInviteStatusPayload) => {
+            console.log("[Reverb] event received:", payload);
             callbackRef.current(payload);
           },
         );
+
+      // Log subscription state
+      const channel = echo.connector.channels[`private-${channelName}`];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      console.log("[Reverb] channel state:", (channel as any)?.subscription?.state);
     });
 
     return () => {
       unsubscribed = true;
-      // Import is already cached — this is just to call leave()
       getEchoClient(token).then((echo) => {
         echo.leave(channelName);
       });
     };
-  }, [token, hospitalId]);
+  }, [token, tenantId]);
 }
 
 /**

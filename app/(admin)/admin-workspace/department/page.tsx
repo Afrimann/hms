@@ -10,6 +10,17 @@ import {
 } from "@/lib/hooks/useDepartment";
 import { Pagination } from "@/components/ui/Pagination";
 import { ActionMenu } from "@/components/ui/ActionMenu";
+import { Select } from "@/components/ui/Select";
+import { toast } from "sonner";
+
+const DEPARTMENT_TYPES = [
+  { label: "Clinical", value: "clinical" },
+  { label: "Diagnostic", value: "diagnostic" },
+  { label: "Pharmacy", value: "pharmacy" },
+  { label: "Inpatient", value: "inpatient" },
+  { label: "Procedural", value: "procedural" },
+  { label: "Administrative", value: "administrative" },
+];
 
 export default function AdminWorkspaceDepartment() {
   const [name, setName] = useState("");
@@ -48,6 +59,7 @@ export default function AdminWorkspaceDepartment() {
       { name, code, type, description } as never,
       {
         onSuccess: () => {
+          toast.success("Department added successfully");
           setName("");
           setCode("");
           setType("");
@@ -92,12 +104,12 @@ export default function AdminWorkspaceDepartment() {
 
           <div className="flex-1 min-w-0">
             <label className="block font-small-regular font-medium mb-1.5">Type</label>
-            <input
-              type="text"
-              placeholder="e.g., diagnostic"
+            <Select
               value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="w-full border border-[#BFBFBF] rounded-lg placeholder:text-[12px] px-3 py-2 text-[12px] text-gray-800 placeholder:text-[#BFBFBF] bg-[#FCFCFC] outline-none focus:border-[#2E4EEA] transition-colors"
+              onChange={(v) => setType(v as string)}
+              options={DEPARTMENT_TYPES}
+              placeholder="Select type"
+              className="bg-[#FCFCFC] text-[12px]"
             />
           </div>
 

@@ -16,6 +16,7 @@ export const authService = {
       user: data.data.user,
       roles: data.data.roles,
       permissions: data.data.permissions,
+      tenant: data.data.tenant,
     });
     return data;
   },

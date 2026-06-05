@@ -11,19 +11,27 @@ declare global {
 let echoInstance: Echo<"reverb"> | null = null;
 let activeToken: string | null = null;
 
+const FRONTEND_TENANT_DOMAINS = ["phms.tech", "lvh.me", "localtest.me"];
+
 function buildAuthEndpoint(): string {
-  // Broadcast auth is tenant-scoped: {slug}.phms.tech/broadcasting/auth
-  // The slug comes from the current subdomain, same as api-client.ts
-  const hostname =
-    typeof window !== "undefined" ? window.location.hostname : "";
-  const slug = hostname.split(".")[0];
-  const host = process.env.NEXT_PUBLIC_REVERB_HOST ?? "api.phms.tech";
+  if (typeof window === "undefined") {
+    const fallback = process.env.NEXT_PUBLIC_REVERB_HOST ?? "api.phms.tech";
+    return `https://${fallback}/api/broadcasting/auth`;
+  }
 
-  // On root domain / localhost fall back to the generic API host
-  const isTenantSubdomain = hostname.includes(".");
-  const authHost = isTenantSubdomain ? `${slug}.${host}` : host;
+  const hostname = window.location.hostname;
+  const isTenantSubdomain = FRONTEND_TENANT_DOMAINS.some((d) =>
+    hostname.endsWith(`.${d}`)
+  );
 
-  return `https://${authHost}/broadcasting/auth`;
+  if (isTenantSubdomain) {
+    // Mirror api-client.ts: slug from hostname, always route to phms.tech
+    const slug = hostname.split(".")[0];
+    return `https://${slug}.phms.tech/api/broadcasting/auth`;
+  }
+
+  const fallback = process.env.NEXT_PUBLIC_REVERB_HOST ?? "api.phms.tech";
+  return `https://${fallback}/api/broadcasting/auth`;
 }
 
 export async function getEchoClient(token: string): Promise<Echo<"reverb">> {
