@@ -6,6 +6,7 @@ import type { TenantUser, TenantPermission, PlanFeature } from "@/types/auth.typ
 
 type Hospital = {
   id: number;
+  uuid: string;
   hospital_name: string;
   hospital_email: string;
   hospital_phone: string;
@@ -35,6 +36,11 @@ type Plan = {
 type AuthState = {
   token: string | null;
   user: TenantUser | null;
+  tenant: {
+    id: string;
+    slug: string;
+    domain: string;
+  }
   roles: string[];
   permissions: string[];
   hospital: Hospital | null;
@@ -49,12 +55,22 @@ type AuthActions = {
     user: TenantUser;
     roles: string[];
     permissions: string[];
+    tenant: {
+      id: string;
+      slug: string;
+      domain: string;
+    };
   }) => void;
   setProfile: (data: {
     user: TenantUser;
     roles: string[];
     permissions: TenantPermission[];
     hospital: Hospital;
+    tenant: {
+      id: string;
+      slug: string;
+      domain: string;
+    };
     subscription: Subscription;
     plan: Plan;
     features: string[];
@@ -69,6 +85,11 @@ const initialState: AuthState = {
   token: null,
   user: null,
   roles: [],
+  tenant: {
+    id: "",
+    slug: "",
+    domain: "",
+  },
   permissions: [],
   hospital: null,
   subscription: null,
@@ -81,16 +102,21 @@ export const useAuthStore = create<AuthState & AuthActions>()(
     (set, get) => ({
       ...initialState,
 
-      setSession({ token, user, roles, permissions }) {
-        set({ token, user, roles, permissions });
+      setSession({ token, user, roles, permissions, tenant }) {
+        set({ token, user, roles, permissions, tenant });
       },
 
-      setProfile({ user, roles, permissions, hospital, subscription, plan, features }) {
+      setProfile({ user, roles, permissions, hospital, subscription, plan, features, tenant }) {
         set({
           user,
           roles,
           permissions: permissions.map((p) => p.name),
           hospital,
+          tenant: {
+            id: tenant.id.toString(),
+            slug: tenant.slug, // You may want to set this based on your API response
+            domain: tenant.domain, // You may want to set this based on your API response
+          },
           subscription,
           plan,
           features,
@@ -134,6 +160,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         subscription: state.subscription,
         plan: state.plan,
         features: state.features,
+        tenant: state.tenant,
       }),
     }
   )

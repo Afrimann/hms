@@ -92,6 +92,11 @@ export type TenantStaffLoginRequest = {
 
 export type TenantStaffLoginResponse = ApiResponse<{
   message: string;
+  tenant: {
+    id: string;
+    slug: string;
+    domain: string;
+  };
   token: string;
   user: TenantUser;
   roles: string[];
@@ -110,10 +115,16 @@ export type PlanFeature = {
 
 export type TenantStaffProfileResponse = ApiResponse<{
   user: TenantUser;
+  tenant: {
+    id: string
+    slug: string
+    domain: string
+  }
   roles: string[];
   permissions: TenantPermission[];
   hospital: {
     id: number;
+    uuid: string;
     hospital_name: string;
     hospital_email: string;
     hospital_phone: string;

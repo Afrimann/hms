@@ -15,6 +15,12 @@ const NAV_ITEMS = [
   { label: "Staff", href: "/admin-workspace/staff", icon: CircleUser },
   { label: "Department", href: "/admin-workspace/department", icon: Building2 },
   { label: "Finance", href: "/admin-workspace/finance", icon: CircleDollarSign },
+  { label: "Patients", href: "/admin-workspace/patients", icon: CircleUser },
+  {label: "Appointments", href: "/admin-workspace/appointments", icon: CircleUser },
+  {label: "Inventory", href: "/admin-workspace/inventory", icon: CircleUser },
+  {label: "Reports", href: "/admin-workspace/reports", icon: CircleUser },
+  {label: "Billing", href: "/admin-workspace/billing", icon: CircleDollarSign },
+  {label: "Notifications", href: "/admin-workspace/notifications", icon: CircleUser },
   { label: "System settings", href: "/admin-workspace/settings", icon: Settings },
 ];
 
