@@ -5,6 +5,7 @@
   --primary: #2E4EEA;
   --border: #BFBFBF;
   --text-muted: #595959;
+  --tag-bg: #CDD5FA
 }
 
 @theme inline {

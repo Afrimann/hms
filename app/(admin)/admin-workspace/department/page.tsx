@@ -51,7 +51,7 @@ export default function AdminWorkspaceDepartment() {
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const canSubmit = !!name.trim() && !!code.trim() && !!type.trim();
+  const canSubmit = !!name.trim() && !!code.trim() && !!type.trim() && !!description.trim();
 
   function handleAdd() {
     if (!canSubmit) return;

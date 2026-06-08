@@ -35,7 +35,6 @@ export function middleware(request: NextRequest) {
   if (isPublicPath) {
     const rootUrl = request.nextUrl.clone();
     rootUrl.host = hostname.split(".").slice(1).join(".");
-    rootUrl.pathname = "/";
     return NextResponse.redirect(rootUrl);
   }
 

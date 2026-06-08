@@ -1,9 +1,4 @@
-import React from 'react'
-
+import {redirect} from 'next/navigation'
 export default function LandingPage() {
-  return (
-    <div>
-    default  page
-    </div>
-  )
+  redirect('/login')
 }

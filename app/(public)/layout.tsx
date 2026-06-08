@@ -2,7 +2,7 @@ import Header from "@/features/onboarding/Header";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "CrownHealth",
+  title: "PHMS",
 };
 
 export default function PublicLayout({

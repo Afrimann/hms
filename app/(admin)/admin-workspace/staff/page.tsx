@@ -14,10 +14,10 @@ export default function AdminWorkspaceStaff() {
     const [departmentId, setDepartmentId] = useState<number | "">("");
     const [role, setRole] = useState("");
     const [search, setSearch] = useState("");
-
+    const [filterDepartment, setFilterDepartment] = useState<number | "">("");
+    const [filterRole, setFilterRole] = useState("");
     const [page, setPage] = useState(1);
     const PAGE_SIZE = 10;
-
     const queryClient = useQueryClient();
 
     const { data: staffData, isLoading } = useStaff();
@@ -35,12 +35,16 @@ export default function AdminWorkspaceStaff() {
     const departments = deptData?.data ?? [];
     const roles = rolesData?.data ?? [];
 
-
-    const filtered = staff.filter(
-        (s) =>
+    const filtered = staff.filter((s) => {
+        const matchesSearch =
             s.full_name.toLowerCase().includes(search.toLowerCase()) ||
-            s.email.toLowerCase().includes(search.toLowerCase())
-    );
+            s.email.toLowerCase().includes(search.toLowerCase());
+        const matchesDepartment =
+            filterDepartment === "" || s.departments.some((d) => d.id === filterDepartment);
+        const matchesRole = filterRole === "" || s.roles.includes(filterRole);
+
+        return matchesSearch && matchesDepartment && matchesRole;
+    });
 
     const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
     const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -118,14 +122,41 @@ export default function AdminWorkspaceStaff() {
             <section className="space-y-3">
                 <p className="text-sm font-semibold text-text-muted">Staff Record</p>
 
-                <div className="flex items-center gap-2 bg-white border border-[#BFBFBF] rounded-[10px] px-4 py-2.5">
-                    <Search size={16} className="text-[#595959] shrink-0" />
-                    <input
-                        type="text"
-                        placeholder="Search for staff"
-                        value={search}
-                        onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                        className="text-sm text-gray-700 placeholder:text-[#595959] placeholder:text-[12px] outline-none bg-transparent w-full"
+                <div className="flex items-center gap-3">
+                    <div className="flex-1 flex items-center gap-2 bg-white border border-[#BFBFBF] rounded-[10px] px-4 py-2.5">
+                        <Search size={16} className="text-[#595959] shrink-0" />
+                        <input
+                            type="text"
+                            placeholder="Search for staff"
+                            value={search}
+                            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                            className="text-sm text-gray-700 placeholder:text-[#595959] placeholder:text-[12px] outline-none bg-transparent w-full"
+                        />
+                    </div>
+
+                    <Select
+                        value={filterDepartment}
+                        onChange={(v) => { setFilterDepartment(v as number | ""); setPage(1); }}
+                        placeholder="Filter by Department"
+                        className="w-52 shrink-0"
+                        options={[
+                            { label: "All Departments", value: "" },
+                            ...departments.map((d) => ({ label: d.name, value: d.id })),
+                        ]}
+                    />
+
+                    <Select
+                        value={filterRole}
+                        onChange={(v) => { setFilterRole(v as string); setPage(1); }}
+                        placeholder="Filter by Role"
+                        className="w-44 shrink-0"
+                        options={[
+                            { label: "All Roles", value: "" },
+                            ...roles.map((r) => ({
+                                label: r.name.replace(/_/g, " "),
+                                value: r.name,
+                            })),
+                        ]}
                     />
                 </div>
 
@@ -189,23 +220,16 @@ export default function AdminWorkspaceStaff() {
                                             </td>
                                             <td className="px-4 py-3">
                                                 <ActionMenu
-                                                    actions={[
-                                                        {
-                                                            label: "Resend Invite",
-                                                            onClick: () => resendInvite(s.id, { onSuccess: invalidateStaff }),
-                                                            disabled: !!s.joined_at,
-                                                        },
-                                                        s.is_active
-                                                            ? {
-                                                                label: "Deactivate",
-                                                                onClick: () => deactivate(s.id, { onSuccess: invalidateStaff }),
-                                                                variant: "danger",
-                                                            }
-                                                            : {
-                                                                label: "Reactivate",
-                                                                onClick: () => reactivate(s.id, { onSuccess: invalidateStaff }),
-                                                            },
-                                                    ]}
+                                                    actions={
+                                                        !s.joined_at
+                                                            ? [{ label: "Resend Invite", onClick: () => resendInvite(s.id, { onSuccess: invalidateStaff }) }]
+                                                            : s.is_active
+                                                            ? [
+                                                                { label: "Edit", onClick: () => {} },
+                                                                { label: "Deactivate", onClick: () => deactivate(s.id, { onSuccess: invalidateStaff }), variant: "danger" },
+                                                              ]
+                                                            : [{ label: "Reactivate", onClick: () => reactivate(s.id, { onSuccess: invalidateStaff }) }]
+                                                    }
                                                 />
                                             </td>
                                         </tr>

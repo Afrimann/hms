@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useLogin } from "@/lib/hooks/useAuth";
 import { useAuthStore } from "@/lib/store/auth.store";
 import ForgotPasswordModal from "@/features/auth/ForgotPasswordModal";
+import Header from "@/features/onboarding/Header";
 
 function getTenantDisplayName(): string {
   if (typeof window === "undefined") return "Your Workspace";
@@ -57,6 +58,7 @@ export default function TenantLoginPage() {
       {
         onSuccess: () => {
           toast.success("Logged in successfully!");
+          // pass the role through env variable so it's not visible in the client bundle - TODO
           const destination = hasRole("hospital_admin")
             ? "/admin-workspace/dashboard"
             : "/dashboard";
@@ -64,7 +66,7 @@ export default function TenantLoginPage() {
         },
         onError: (err) =>
           toast.error(err.message || "Invalid credentials. Please try again."),
-      },
+      },  
     );
   }
 
@@ -76,20 +78,19 @@ export default function TenantLoginPage() {
       {showForgotPassword && (
         <ForgotPasswordModal onClose={() => setShowForgotPassword(false)} />
       )}
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+        <Header />
+
         {/* Card */}
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+        <div className="w-full max-w-md p-8  mt-16">
           {/* Branding */}
           <div className="mb-8 text-center">
-            <span className="font-bold text-sm tracking-widest uppercase text-primary">
-              CrownHealth
-            </span>
-            <h1 className="mt-3 text-2xl font-bold text-gray-900 tracking-tight">
+            <h1 className=" text-2xl font-bold text-gray-900 tracking-tight">
               Welcome back
             </h1>
             <p className="mt-1 text-sm text-text-muted">
               Sign in to{" "}
-              <span className="font-medium text-gray-700">{tenantName}</span>
+              <span className="font-bold uppercase text-primary">{tenantName}</span>
             </p>
           </div>
 
@@ -106,13 +107,12 @@ export default function TenantLoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                 placeholder="e.g., admin@yourhospital.com"
-                className={`w-full px-4 py-3 rounded-xl border text-sm outline-none transition-all duration-200
+                className={`w-full px-4 py-3 rounded-[10px] border text-sm outline-none transition-all duration-200
                 bg-white text-gray-900 placeholder:text-gray-400
-                ${
-                  currentErrors.email
+                ${currentErrors.email
                     ? "border-red-400 focus:border-red-500 bg-red-50/20"
                     : "border-border focus:border-primary focus:ring-2 focus:ring-primary/10"
-                }`}
+                  }`}
               />
               {currentErrors.email && (
                 <p className="text-xs text-red-500 flex items-center gap-1">
@@ -142,13 +142,12 @@ export default function TenantLoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                   placeholder="Enter your password"
-                  className={`w-full px-4 py-3 pr-11 rounded-xl border text-sm outline-none transition-all duration-200
+                  className={`w-full px-4 py-3 pr-11 rounded-[10px] border text-sm outline-none transition-all duration-200
                   bg-white text-gray-900 placeholder:text-gray-400
-                  ${
-                    currentErrors.password
+                  ${currentErrors.password
                       ? "border-red-400 focus:border-red-500 bg-red-50/20"
                       : "border-border focus:border-primary focus:ring-2 focus:ring-primary/10"
-                  }`}
+                    }`}
                 />
                 <div
                   onClick={() => setShowPassword((v) => !v)}
@@ -202,11 +201,10 @@ export default function TenantLoginPage() {
           <div
             onClick={!isPending ? handleSubmit : undefined}
             className={`mt-6 w-full py-3.5 rounded-xl text-sm font-semibold text-center transition-all duration-200 select-none
-            ${
-              isValid && !isPending
+            ${isValid && !isPending
                 ? "bg-primary text-white cursor-pointer hover:opacity-90 shadow-lg shadow-primary/25"
                 : "bg-gray-200 text-gray-400 cursor-not-allowed"
-            }`}
+              }`}
           >
             {isPending ? (
               <span className="flex items-center justify-center gap-2">
@@ -232,14 +230,14 @@ export default function TenantLoginPage() {
                 Signing in...
               </span>
             ) : (
-              "Sign In"
+              "Save & Continue To Hospital Info"
             )}
           </div>
         </div>
 
         {/* Footer */}
         <p className="mt-6 text-xs text-text-muted">
-          &copy; {new Date().getFullYear()} CrownHealth Technologies Ltd.
+          &copy; {new Date().getFullYear()} PHMS Technologies Ltd.
         </p>
       </div>
     </>

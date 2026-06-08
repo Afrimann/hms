@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { useAcceptInvite } from "@/lib/hooks/useStaff";
+import Header from "@/features/onboarding/Header";
 
 type Fields = {
   first_name: string;
@@ -35,6 +36,8 @@ export default function AcceptInvitePage() {
   const params = useSearchParams();
   const token = params.get("token") ?? "";
   const email = params.get("email") ?? "";
+  const department = params.get("department") ?? "";
+  const role = params.get("role") ?? "";
 
   const { mutate: acceptInvite, isPending } = useAcceptInvite();
 
@@ -73,62 +76,88 @@ export default function AcceptInvitePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] flex flex-col items-center justify-center px-4 py-12">
-      <div className="w-full max-w-lg bg-white rounded-2xl border border-[#BFBFBF] shadow-sm p-8">
+    <div className="min-h-screen bg-white flex flex-col items-center">
+      <Header />
 
-        {/* Branding */}
+      <div className="w-full max-w-lg px-4 py-12">
+
+        {/* Heading */}
         <div className="mb-8 text-center">
-          <span className="text-[#2E4EEA] font-bold text-2xl tracking-tight">PHMS</span>
-          <h1 className="mt-3 text-xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900">
             Accept Your Invitation
           </h1>
           <p className="mt-1 text-sm text-[#595959]">
             Complete your profile to activate your account
           </p>
-          {email && (
-            <div className="mt-3 inline-flex items-center gap-2 bg-[#2E4EEA]/5 border border-[#2E4EEA]/20 text-[#2E4EEA] text-xs font-medium px-3 py-1.5 rounded-full">
-              {email}
-            </div>
-          )}
         </div>
 
         <div className="flex flex-col gap-4">
           {/* Name row */}
-          <div className="flex gap-3">
-            <div className="flex-1">
-              <label className="block text-xs font-medium text-[#595959] mb-1.5">
-                First Name
-              </label>
-              <input
-                type="text"
-                placeholder="e.g., John"
-                value={fields.first_name}
-                onChange={(e) => set("first_name", e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder:text-[#BFBFBF] outline-none transition-colors
+          <div className="flex-1">
+            <label className="block text-xs font-medium text-[#595959] mb-1.5">
+              Full Name
+            </label>
+            <input
+              type="text"
+              placeholder="e.g., Abiodun Oluwapelumi Amos"
+              value={fields.first_name}
+              onChange={(e) => set("first_name", e.target.value)}
+              className={`w-full border rounded-[10px] px-3 py-2.5 text-sm text-gray-800 placeholder:text-[#BFBFBF] outline-none transition-colors
                   ${errors.first_name ? "border-red-400 bg-red-50/20" : "border-[#BFBFBF] focus:border-[#2E4EEA] focus:ring-2 focus:ring-[#2E4EEA]/10"}`}
-              />
-              {errors.first_name && (
-                <p className="mt-1 text-xs text-red-500">{errors.first_name}</p>
-              )}
-            </div>
-            <div className="flex-1">
-              <label className="block text-xs font-medium text-[#595959] mb-1.5">
-                Last Name
-              </label>
+            />
+            {errors.first_name && (
+              <p className="mt-1 text-xs text-red-500">{errors.first_name}</p>
+            )}
+          </div>
+          {/* Email (locked) */}
+          <div>
+            <label className="block text-xs font-medium text-[#595959] mb-1.5">
+              Email Address
+            </label>
+            <div className="relative">
               <input
-                type="text"
-                placeholder="e.g., Doe"
-                value={fields.last_name}
-                onChange={(e) => set("last_name", e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder:text-[#BFBFBF] outline-none transition-colors
-                  ${errors.last_name ? "border-red-400 bg-red-50/20" : "border-[#BFBFBF] focus:border-[#2E4EEA] focus:ring-2 focus:ring-[#2E4EEA]/10"}`}
+                type="email"
+                value={email}
+                disabled
+                className="w-full border border-[#BFBFBF] rounded-[10px] px-3 py-2.5 pr-10 text-sm text-gray-500 bg-[#F5F5F5] outline-none cursor-not-allowed"
               />
-              {errors.last_name && (
-                <p className="mt-1 text-xs text-red-500">{errors.last_name}</p>
-              )}
+              <Lock size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#000000]" />
             </div>
           </div>
 
+          <div className="flex gap-3 items-center">
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-[#595959] mb-1.5">
+                Department
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="e.g., Cardiology"
+                  value={department}
+                  disabled
+                  className="w-full border border-[#BFBFBF] rounded-[10px] px-3 py-2.5 pr-10 text-sm text-gray-500 bg-[#F5F5F5] outline-none cursor-not-allowed"
+                />
+                <Lock size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#000000]" />
+
+              </div>
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs font-medium text-[#595959] mb-1.5">
+                Role
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="e.g., Cardiology"
+                  value={role}
+                  disabled
+                  className="w-full border border-[#BFBFBF] rounded-[10px] px-3 py-2.5 pr-10 text-sm text-gray-500 bg-[#F5F5F5] outline-none cursor-not-allowed"
+                />
+                <Lock size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#000000]" />
+              </div>
+            </div>
+          </div>
           {/* Phone */}
           <div>
             <label className="block text-xs font-medium text-[#595959] mb-1.5">
@@ -139,7 +168,7 @@ export default function AcceptInvitePage() {
               placeholder="e.g., +2348012345678"
               value={fields.phone}
               onChange={(e) => set("phone", e.target.value)}
-              className={`w-full border rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder:text-[#BFBFBF] outline-none transition-colors
+              className={`w-full border rounded-[10px] px-3 py-2.5 text-sm text-gray-800 placeholder:text-[#BFBFBF] outline-none transition-colors
                 ${errors.phone ? "border-red-400 bg-red-50/20" : "border-[#BFBFBF] focus:border-[#2E4EEA] focus:ring-2 focus:ring-[#2E4EEA]/10"}`}
             />
             {errors.phone && (
@@ -158,7 +187,7 @@ export default function AcceptInvitePage() {
                 placeholder="Minimum 8 characters"
                 value={fields.password}
                 onChange={(e) => set("password", e.target.value)}
-                className={`w-full border rounded-lg px-3 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-[#BFBFBF] outline-none transition-colors
+                className={`w-full border rounded-[10px] px-3 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-[#BFBFBF] outline-none transition-colors
                   ${errors.password ? "border-red-400 bg-red-50/20" : "border-[#BFBFBF] focus:border-[#2E4EEA] focus:ring-2 focus:ring-[#2E4EEA]/10"}`}
               />
               <button
@@ -186,7 +215,7 @@ export default function AcceptInvitePage() {
                 value={fields.password_confirmation}
                 onChange={(e) => set("password_confirmation", e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                className={`w-full border rounded-lg px-3 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-[#BFBFBF] outline-none transition-colors
+                className={`w-full border rounded-[10px] px-3 py-2.5 pr-10 text-sm text-gray-800 placeholder:text-[#BFBFBF] outline-none transition-colors
                   ${errors.password_confirmation ? "border-red-400 bg-red-50/20" : "border-[#BFBFBF] focus:border-[#2E4EEA] focus:ring-2 focus:ring-[#2E4EEA]/10"}`}
               />
               <button
@@ -224,12 +253,12 @@ export default function AcceptInvitePage() {
               Activating account…
             </span>
           ) : (
-            "Activate Account"
+            "Save & Continue To Hospital Info"
           )}
         </button>
       </div>
 
-      <p className="mt-6 text-xs text-[#595959]">
+      <p className="mb-8 text-xs text-[#595959]">
         &copy; {new Date().getFullYear()} PHMS. All rights reserved.
       </p>
     </div>

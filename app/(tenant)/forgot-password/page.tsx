@@ -99,7 +99,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         <p className="mt-6 text-xs text-text-muted">
-          &copy; {new Date().getFullYear()} CrownHealth Technologies Ltd.
+          &copy; {new Date().getFullYear()} PHMS Technologies Ltd.
         </p>
       </div>
     );
@@ -110,7 +110,7 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
         <div className="mb-8 text-center">
           <span className="font-bold text-sm tracking-widest uppercase text-primary">
-            CrownHealth
+            PHMS
           </span>
           <h1 className="mt-3 text-2xl font-bold text-gray-900 tracking-tight">
             Forgot your password?
@@ -200,7 +200,7 @@ export default function ForgotPasswordPage() {
       </div>
 
       <p className="mt-6 text-xs text-text-muted">
-        &copy; {new Date().getFullYear()} CrownHealth Technologies Ltd.
+        &copy; {new Date().getFullYear()} PHMS Technologies Ltd.
       </p>
     </div>
   );

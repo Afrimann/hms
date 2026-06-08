@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | CrownHealth",
+  title: "Privacy Policy | PHMS",
 };
 
 const LAST_UPDATED = "May 29, 2026";
@@ -17,7 +17,7 @@ const sections = [
   },
   {
     title: "3. Healthcare Data & HIPAA",
-    content: `CrownHealth is designed to support healthcare operations. We treat all patient-related data processed through our platform as Protected Health Information (PHI) under HIPAA. We maintain appropriate technical and administrative safeguards, and we enter into a Business Associate Agreement (BAA) with all healthcare customers upon request.`,
+    content: `PHMS is designed to support healthcare operations. We treat all patient-related data processed through our platform as Protected Health Information (PHI) under HIPAA. We maintain appropriate technical and administrative safeguards, and we enter into a Business Associate Agreement (BAA) with all healthcare customers upon request.`,
   },
   {
     title: "4. Data Security",
@@ -29,7 +29,7 @@ const sections = [
   },
   {
     title: "6. Your Rights",
-    content: `You have the right to access, correct, or delete the personal data we hold about your organisation. You may request a data export at any time from your account dashboard. For erasure requests or data portability inquiries, contact our Data Protection Officer at privacy@crownhealth.io.`,
+    content: `You have the right to access, correct, or delete the personal data we hold about your organisation. You may request a data export at any time from your account dashboard. For erasure requests or data portability inquiries, contact our Data Protection Officer at privacy@phms.tech.`,
   },
   {
     title: "7. Cookies",
@@ -41,7 +41,7 @@ const sections = [
   },
   {
     title: "9. Contact Us",
-    content: `For any questions regarding this Privacy Policy or our data practices, please contact us at:\n\nEmail: privacy@crownhealth.io\nAddress: CrownHealth Technologies Ltd., 14 Innovation Drive, Lagos, Nigeria.`,
+    content: `For any questions regarding this Privacy Policy or our data practices, please contact us at:\n\nEmail: privacy@phms.tech\nAddress: PHMS Technologies Ltd., 14 Innovation Drive, Lagos, Nigeria.`,
   },
 ];
 
@@ -56,7 +56,7 @@ export default function PrivacyPolicyPage() {
       </div>
 
       <p className="text-sm text-gray-700 leading-relaxed mb-10">
-        CrownHealth Technologies Ltd. (&quot;CrownHealth&quot;, &quot;we&quot;, &quot;our&quot;) operates a
+        PHMS Technologies Ltd. (&quot;PHMS&quot;, &quot;we&quot;, &quot;our&quot;) operates a
         cloud-based hospital management platform. This Privacy Policy explains how we
         collect, use, store, and protect information about you and your organisation
         when you use our services.
@@ -76,7 +76,7 @@ export default function PrivacyPolicyPage() {
       </div>
 
       <div className="mt-12 pt-8 border-t border-gray-100 text-xs text-text-muted">
-        &copy; {new Date().getFullYear()} CrownHealth Technologies Ltd. All rights reserved.
+        &copy; {new Date().getFullYear()} PHMS Technologies Ltd. All rights reserved.
       </div>
     </main>
   );

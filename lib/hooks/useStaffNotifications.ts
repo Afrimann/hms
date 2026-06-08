@@ -39,7 +39,7 @@ export function useStaffInviteStatus({
     console.log("[Reverb] token:", !!token, "tenantId:", tenantId);
     if (!token || !tenantId) return;
 
-    const channelName = `tenant.${tenantId}.staff`;
+    const channelName = `tenant.${tenantId}.notifications`;
     let unsubscribed = false;
 
     getEchoClient(token).then((echo) => {

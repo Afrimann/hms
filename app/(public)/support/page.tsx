@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Support | CrownHealth",
+  title: "Support | PHMS",
 };
 
 const FAQS = [
@@ -40,9 +40,9 @@ const CHANNELS = [
       </svg>
     ),
     label: "Email Support",
-    value: "support@crownhealth.io",
+    value: "support@phms.tech",
     detail: "Response within 24 hours on business days",
-    href: "mailto:support@crownhealth.io",
+    href: "mailto:support@phms.tech",
   },
   {
     icon: (
@@ -51,7 +51,7 @@ const CHANNELS = [
       </svg>
     ),
     label: "Phone Support",
-    value: "+234 800 CROWN HQ",
+    value: "+234 800 PHMS HQ",
     detail: "Monday – Friday, 8am – 6pm WAT",
     href: "tel:+2348002769646",
   },
@@ -76,7 +76,7 @@ export default function SupportPage() {
           Support
         </h1>
         <p className="text-sm text-text-muted">
-          We&apos;re here to help you get the most out of CrownHealth.
+          We&apos;re here to help you get the most out of PHMS.
         </p>
       </div>
 

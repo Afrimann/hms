@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | CrownHealth",
+  title: "Terms of Service | PHMS",
 };
 
 const LAST_UPDATED = "May 29, 2026";
@@ -9,15 +9,15 @@ const LAST_UPDATED = "May 29, 2026";
 const sections = [
   {
     title: "1. Acceptance of Terms",
-    content: `By registering a hospital workspace or accessing any part of the CrownHealth platform, you agree to be bound by these Terms of Service. If you are registering on behalf of an organisation, you represent that you have the authority to bind that organisation to these terms.`,
+    content: `By registering a hospital workspace or accessing any part of the PHMS platform, you agree to be bound by these Terms of Service. If you are registering on behalf of an organisation, you represent that you have the authority to bind that organisation to these terms.`,
   },
   {
     title: "2. Description of Service",
-    content: `CrownHealth provides a cloud-based hospital management system including department management, staff administration, patient record workflows, billing, and subscription management tools. Features available to you depend on your chosen subscription plan.`,
+    content: `PHMS provides a cloud-based hospital management system including department management, staff administration, patient record workflows, billing, and subscription management tools. Features available to you depend on your chosen subscription plan.`,
   },
   {
     title: "3. Account Registration",
-    content: `You must complete the registration process accurately and keep your credentials secure. You are responsible for all activity that occurs under your account. Notify us immediately at security@crownhealth.io if you suspect unauthorised access to your workspace.`,
+    content: `You must complete the registration process accurately and keep your credentials secure. You are responsible for all activity that occurs under your account. Notify us immediately at security@phms.tech if you suspect unauthorised access to your workspace.`,
   },
   {
     title: "4. Subscriptions & Billing",
@@ -29,7 +29,7 @@ const sections = [
   },
   {
     title: "6. Intellectual Property",
-    content: `CrownHealth and its licensors retain all rights to the platform, software, and documentation. These terms do not transfer any intellectual property rights to you. Your hospital data remains your property; we claim no ownership over data you input into the platform.`,
+    content: `PHMS and its licensors retain all rights to the platform, software, and documentation. These terms do not transfer any intellectual property rights to you. Your hospital data remains your property; we claim no ownership over data you input into the platform.`,
   },
   {
     title: "7. Uptime & Service Level",
@@ -37,7 +37,7 @@ const sections = [
   },
   {
     title: "8. Limitation of Liability",
-    content: `To the maximum extent permitted by law, CrownHealth shall not be liable for any indirect, incidental, or consequential damages arising from your use of the platform. Our total liability to you in any calendar month shall not exceed the fees you paid to us in that month.`,
+    content: `To the maximum extent permitted by law, PHMS shall not be liable for any indirect, incidental, or consequential damages arising from your use of the platform. Our total liability to you in any calendar month shall not exceed the fees you paid to us in that month.`,
   },
   {
     title: "9. Termination",
@@ -53,7 +53,7 @@ const sections = [
   },
   {
     title: "12. Contact",
-    content: `For questions about these Terms, contact us at:\n\nEmail: legal@crownhealth.io\nAddress: CrownHealth Technologies Ltd., 14 Innovation Drive, Lagos, Nigeria.`,
+    content: `For questions about these Terms, contact us at:\n\nEmail: legal@phms.tech\nAddress: PHMS Technologies Ltd., 14 Innovation Drive, Lagos, Nigeria.`,
   },
 ];
 
@@ -68,9 +68,9 @@ export default function TermsOfServicePage() {
       </div>
 
       <p className="text-sm text-gray-700 leading-relaxed mb-10">
-        Please read these Terms of Service carefully before using the CrownHealth
+        Please read these Terms of Service carefully before using the PHMS
         platform. These terms form a legally binding agreement between you (or the
-        organisation you represent) and CrownHealth Technologies Ltd.
+        organisation you represent) and PHMS Technologies Ltd.
       </p>
 
       <div className="flex flex-col gap-8">
@@ -87,7 +87,7 @@ export default function TermsOfServicePage() {
       </div>
 
       <div className="mt-12 pt-8 border-t border-gray-100 text-xs text-text-muted">
-        &copy; {new Date().getFullYear()} CrownHealth Technologies Ltd. All rights reserved.
+        &copy; {new Date().getFullYear()} PHMS Technologies Ltd. All rights reserved.
       </div>
     </main>
   );
